@@ -17,7 +17,8 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        run: |
+          git clone --depth 1 https://github.com/nvluongg/cinenote-devsecops.git .
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
