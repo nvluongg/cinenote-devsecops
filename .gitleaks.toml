@@ -1,0 +1,11 @@
+title = "CineNote Gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Ignore bundled public third-party frontend SDK files"
+paths = [
+  '''frontend/js/vendor/aws-sdk-2\.1481\.0\.min\.js''',
+  '''frontend/js/vendor/amazon-cognito-identity\.min\.js'''
+]

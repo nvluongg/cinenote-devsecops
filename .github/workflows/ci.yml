@@ -58,7 +58,7 @@ jobs:
 
       - name: Run Gitleaks secret scan
         run: |
-          docker run --rm -v "${PWD}:/path" ghcr.io/gitleaks/gitleaks:latest dir /path --verbose
+          docker run --rm -v "${PWD}:/path" ghcr.io/gitleaks/gitleaks:latest dir /path --config /path/.gitleaks.toml --verbose
 
       - name: Run Semgrep static analysis
         run: |
