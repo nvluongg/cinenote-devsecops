@@ -189,7 +189,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub 'CineNoteApi-${EnvironmentName}'
-      Runtime: nodejs18.x
+      Runtime: nodejs24.x
       Handler: cinenoteHandler.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 15
