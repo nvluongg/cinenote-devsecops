@@ -1,0 +1,61 @@
+name: CineNote CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ci:
+    name: Build and Security Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: backend/lambda/package-lock.json
+
+      - name: Install Lambda dependencies
+        working-directory: backend/lambda
+        run: npm ci
+
+      - name: Run npm audit
+        working-directory: backend/lambda
+        run: npm audit --audit-level=high
+
+      - name: Check Lambda syntax
+        run: node --check backend/lambda/cinenoteHandler.js
+
+      - name: Package Lambda zip
+        run: |
+          mkdir -p dist
+          cd backend/lambda
+          zip -r ../../dist/cinenote-lambda.zip cinenoteHandler.js package.json package-lock.json node_modules
+
+      - name: Upload Lambda artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cinenote-lambda
+          path: dist/cinenote-lambda.zip
+
+      - name: Install cfn-lint
+        run: pip install cfn-lint
+
+      - name: Validate CloudFormation template
+        run: cfn-lint infrastructure/cinenote-stack.yaml
+
+      - name: Run Gitleaks secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Semgrep static analysis
+        run: |
+          docker run --rm -v "${PWD}:/src" semgrep/semgrep semgrep scan --config auto /src
