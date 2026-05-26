@@ -53,9 +53,8 @@ jobs:
         run: cfn-lint infrastructure/cinenote-stack.yaml
 
       - name: Run Gitleaks secret scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker run --rm -v "${PWD}:/path" ghcr.io/gitleaks/gitleaks:latest dir /path --verbose
 
       - name: Run Semgrep static analysis
         run: |
