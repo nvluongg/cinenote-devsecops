@@ -132,4 +132,4 @@ Use `infrastructure/cinenote-stack.yaml` to provision the backend. The template 
 - Restrict `LambdaExecutionRole` permissions if you add more tables.
 - Enable AWS WAF on the API Gateway stage for advanced protection.
 - Configure CloudWatch alarms on Lambda errors and API Gateway 5xx rates.
-- Set appropriate password policies or MFA in Cognito for production hardening.
+- Set appropriate password policies or MFA in Cognito for production hardening. 
